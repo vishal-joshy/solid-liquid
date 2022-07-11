@@ -1,3 +1,5 @@
+using LexicalAnalyzer;
+
 public class TokenGenerator
 {
     private List<Token> tokens;
