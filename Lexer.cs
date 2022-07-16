@@ -7,7 +7,9 @@ namespace LexicalAnalyzer
         Mult,
         Div,
         Double,
-        NULL
+        NULL,
+        OPAREN,
+        CPAREN
     }
 
     public class Token
@@ -41,6 +43,8 @@ namespace LexicalAnalyzer
                     case '-': Tokens.Add(new Token(TokenType.Minus)); break;
                     case '*': Tokens.Add(new Token(TokenType.Mult)); break;
                     case '/': Tokens.Add(new Token(TokenType.Div)); break;
+                    case '(':Tokens.Add(new Token(TokenType.OPAREN));break;
+                    case ')':Tokens.Add(new Token(TokenType.CPAREN));break;
                     default:
                         if (isNumber(data[i]))
                         {
