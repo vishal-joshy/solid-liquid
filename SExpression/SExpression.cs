@@ -1,14 +1,18 @@
 using LexicalAnalyzer;
 
-namespace SExpression
+namespace SExpr
 {
-    public static class SExpParser
+    public class SExpression
     {
-        public static double Evaluate(string expString)
-        {
-            List<Token> tokenList = new List<Token>();
-            tokenList = Lexer.Analyze(expString);
+        List<Token> tokenList = new List<Token>();
 
+        public SExpression(string expString)
+        {
+            this.tokenList = Lexer.Analyze(expString);
+        }
+
+        public double Evaluate()
+        {
             Stack<Token> atomStack = new Stack<Token>();
             Stack<double> evalStack = new Stack<double>();
 
@@ -24,24 +28,13 @@ namespace SExpression
                     double result = 0;
                     while (atom.TokenType != TokenType.OPAREN)
                     {
-                        if (atom.TokenType == TokenType.Double)
+                        if (atom.TokenType == TokenType.Double) //populate eval stack with operands
                         {
                             evalStack.Push(atom.DoubleValue);
                         }
                         else
                         {
-                            result = evalStack.Pop();
-                            while (evalStack.Count > 0)
-                            {
-                                switch (atom.TokenType)
-                                {
-                                    case TokenType.Plus: result = result + evalStack.Pop(); break;
-                                    case TokenType.Mult: result = result * evalStack.Pop(); break;
-                                    case TokenType.Minus: result = result - evalStack.Pop(); break;
-                                    case TokenType.Div: result = result / evalStack.Pop(); break;
-                                    default: throw new Exception("invalid op");
-                                }
-                            }
+                            result = operateOnStack(atom.TokenType, evalStack);
                         }
                         atom = atomStack.Pop();
                     }
@@ -49,6 +42,35 @@ namespace SExpression
                 }
             }
             return atomStack.Pop().DoubleValue;
+        }
+
+        private double operateOnStack(TokenType op, Stack<double> evalStack)
+        {
+            double result = 0;
+            if (evalStack.Count == 1) //Only one operand unary op
+            {
+                result = evalStack.Pop();
+                if (op == TokenType.Minus)
+                {
+                    result = -result;
+                }
+            }
+            if (evalStack.Count > 1) // more than 1 operand binary op on eval stack
+            {
+                result = evalStack.Pop();
+                while (evalStack.Count > 0)
+                {
+                    switch (op)
+                    {
+                        case TokenType.Plus: result = result + evalStack.Pop(); break;
+                        case TokenType.Mult: result = result * evalStack.Pop(); break;
+                        case TokenType.Minus: result = result - evalStack.Pop(); break;
+                        case TokenType.Div: result = result / evalStack.Pop(); break;
+                        default: throw new Exception("invalid op");
+                    }
+                }
+            }
+            return result;
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Reactive;
 using System.Reactive.Linq;
 using Observer;
-using SExpression;
+using SExpr;
 
 public class Program
 {
@@ -22,8 +22,9 @@ public class Program
         // Console.Write(Observ.Eval(source));
 
         // SExpression
-        string expString = "(*(+ 1 3 3 4)(- 5 3))";
-        double result = SExpParser.Evaluate(expString);
+        string expString = "(*(+ 1 3 3 4)(- 5 3) (- 1))";
+        SExpression sExp = new SExpression(expString);
+        double result = sExp.Evaluate();
         Console.WriteLine(result);
     }
 }
