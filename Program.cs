@@ -26,5 +26,9 @@ public class Program
         SExpression sExp = new SExpression(expString);
         double result = sExp.Evaluate();
         Console.WriteLine(result);
+
+        // // BSort
+        // int[] arr = { 4, 3, 1, 2 };
+        // BubbleSort.Sort(arr);
     }
 }
